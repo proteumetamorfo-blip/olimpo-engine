@@ -1,0 +1,10 @@
+db/*.db
+data/raw/access.json
+__pycache__/
+core/__pycache__/
+security/__pycache__/
+tools/__pycache__/
+*.pyc
+*.save
+*.log
+*.jsonfg
