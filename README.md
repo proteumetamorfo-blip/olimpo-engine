@@ -1,25 +1,24 @@
-# ⚡ Olimpo Engine
+# ⚡ Olimpo Engine - Business Intelligence Automation Backend.
 
-# Business Intelligence Automation Backend — IDS de Nível de Aplicação
+Olimpo Engine é um sistema de monitoramento e detecção de comportamento suspeito em aplicações web.
 
-> Desenvolvido inteiramente via (Android + Termux),
-> Esse é o Dashboard do Olimpo Engine: https://proteumetamorfo-blip.github.io/olimpo-engine/
-> O dashborard mostra registro de um ataque simulado. (Foram simulado um total de 97 tentativas de usuários malioso e usuários legítimos misturados. O código conseguiu captar todos os anômalos que implementei.
+Enquanto firewalls tradicionais analisam portas e protocolos de rede, o Olimpo Engine observa o comportamento dos usuários dentro da aplicação, identificando padrões que podem indicar ataques, abuso de recursos ou tentativas de invasão.
+
+Durante a simulação apresentada no dashboard, o sistema processou dezenas de eventos legítimos e maliciosos, identificando automaticamente atividades suspeitas como força bruta, varredura de rotas administrativas, uso de ferramentas de pentest automatizadas e métodos HTTP incomuns.
+
+O projeto foi desenvolvido integralmente em Python, utilizando SQLite para persistência dos eventos e um mecanismo próprio de regras para análise de tráfego em tempo real.
+
+> Seu objetivo é demonstrar conceitos de:
+
+• ETL aplicado a logs
+• Monitoramento de eventos
+• Rate limiting
+• Intrusion Detection Systems (IDS)
+• Processamento contínuo de dados
+• Arquitetura modular de segurança
 
 
-## O Problema que me motivou a criar o Olímpo
-
-Firewalls tradicionais protegem portas e protocolos.
-Eles não enxergam **comportamento**.
-
-Um atacante que tenta 50 logins errados pela porta 443 passa pelo firewall
-de rede sem ser detectado, porque a porta está aberta e o protocolo é válido.
-
-O Olimpo Engine resolve isso na camada de aplicação: analisa o **padrão**
-das requisições, não apenas se elas chegaram.
-
-
-## O Olimpo Engine trabalha assim:
+# O Olimpo Engine trabalha assim:
 
 ```
 EVENTOS BRUTOS
@@ -46,12 +45,7 @@ EVENTOS BRUTOS
        │
        ▼
   DASHBOARD + RELATÓRIO HTML
-```
 
-
-## Resultados reais da simulação apresentada no dashboard.
-
-```
 Total eventos processados:   92
 Alertas CRITICAL:            29
 Alertas WARNING:              9
@@ -66,10 +60,10 @@ BLACKLIST GERADA:
 AMEAÇAS IDS:
   [HIGH]   104.21.45.33   → MALICIOUS_UA  (sqlmap detectado)
   [MEDIUM] 89.248.172.16  → ROUTE_SCAN    (/wp-admin, /.env, /phpmyadmin)
+
+*Para melhorar o entendendo do dashboard acesse o link: https://proteumetamorfo-blip.github.io/olimpo-engine/*
 ```
-
-
-## Estrutura do projeto
+# Estrutura do projeto
 
 ```
 olimpo-engine-V2/
@@ -92,7 +86,7 @@ olimpo-engine-V2/
 ```
 
 
-## Tecnologias
+# Tecnologias utilizadas
 
 | Tecnologia | Uso |
 |------------|-----|
@@ -105,7 +99,7 @@ olimpo-engine-V2/
 **Dependências externas: zero.**
 
 
-## Como rodar o Olimpo Engine.
+# Como rodar o Olimpo Engine.
 
 ```bash
 # Pré-requisito no Termux
@@ -121,7 +115,7 @@ python pipeline.py
 python dashboard.py --once
 ```
 
-### Modo tempo real (duas sessões)
+# Modo tempo real (duas sessões)
 ```bash
 # Sessão 1
 python daemon.py
@@ -142,32 +136,17 @@ python tools/log_generator.py --speed normal
 | `METHOD_ABUSE` | DELETE, TRACE em rotas comuns | MEDIUM |
 
 
-## Evolução em relação ao V1
-
-| V1 | V2 |
-|----|----|
-| Arquivos na raiz | Pastas separadas por responsabilidade |
-| Modo batch apenas | Modo daemon em tempo real |
-| Rate limit simples | Rate limit + 4 regras IDS |
-| Relatório no terminal | Dashboard CLI + relatório HTML |
-| Sem gerador de logs | Gerador de tráfego com ataques simulados |
-
-
-
-## O que falta para torna o Olimpo Engine mais competente:
+# Essas são as complementações que podem deixar o Olimpo Engine mais forte.
 
 - VPS Linux com Nginx em formato JSON
 - Daemon systemd para processo ativo 24/7
 - Integração com iptables/ufw para bloqueio na rede
 - Alertas via webhook (Telegram, email)
 
-A lógica de detecção não muda. Só o ambiente de execução.
+> Esse projeto foi totalmente desenvolvido inteiramente via (Android + Termux),
 
-Desenvolvido inteiramente 
-
-O objetivo foi provar que é possível projetar arquitetura de segurança
-em camadas com as ferramentas disponíveis — não com as ideais.
+O meu objetivo foi provar que é possível projetar arquitetura de segurança
+em camadas com as ferramentas disponíveis.
 
 
 **Vinícios Silva** — Técnico em Redes de Computadores
-Goiana, Pernambuco · vinicios098silva@gmail.com
