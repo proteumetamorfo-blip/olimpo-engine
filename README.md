@@ -86,6 +86,7 @@ olimpo-engine-V2/
 ```
 
 
+
 # Tecnologia utilizadas.
 
 | Tecnologia | Uso |
@@ -95,6 +96,7 @@ olimpo-engine-V2/
 | Regex compilada | Performance nas regras IDS |
 | ANSI escape codes | Dashboard sem dependências externas |
 | Termux (Android) | Ambiente de desenvolvimento |
+
 
 
 ```
