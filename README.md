@@ -135,7 +135,7 @@ python tools/log_generator.py --speed normal
 ```
 
 
-## Regras IDS implementadas.
+# Regras IDS implementadas.
 
 | Regra | O que detecta | Severidade |
 
