@@ -86,7 +86,7 @@ olimpo-engine-V2/
 ```
 
 
-# Tecnologias utilizadas
+# Tecnologia utilizadas.
 
 | Tecnologia | Uso |
 |------------|-----|
@@ -96,7 +96,6 @@ olimpo-engine-V2/
 | ANSI escape codes | Dashboard sem dependências externas |
 | Termux (Android) | Ambiente de desenvolvimento |
 
-**Dependências externas: zero.**
 
 ```
 # Como rodar o Olimpo Engine.
@@ -132,7 +131,7 @@ python tools/log_generator.py --speed normal
 ```
 
 
-## Regras IDS implementadas
+## Regras IDS implementadas.
 
 | Regra | O que detecta | Severidade |
 
