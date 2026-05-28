@@ -40,7 +40,7 @@ EVENTOS BRUTOS
 
 > Para acessar o dashboard que é gerado no final de todo esse processo acesse o link: https://proteumetamorfo-blip.github.io/olimpo-engine/
 
-# Tecnologia Utilizadas.
+# Tecnologia Utilizadas e conceitos de aprimoramento.
 
 ```
 | Tecnologia | Uso |
@@ -50,10 +50,9 @@ EVENTOS BRUTOS
 | Regex compilada | Performance nas regras IDS |
 | ANSI escape codes | Dashboard sem dependências externas |
 | Termux (Android) | Ambiente de desenvolvimento |
-```
 
-# Essas são as complementações que podem deixar o Olimpo Engine mais forte
-```
+Essas são as complementações que podem deixar o Olimpo Engine mais forte
+
 - VPS Linux com Nginx em formato JSON
 - Daemon systemd para processo ativo 24/7
 - Integração com iptables/ufw para bloqueio na rede
