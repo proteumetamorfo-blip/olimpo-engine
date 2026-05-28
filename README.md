@@ -40,16 +40,14 @@ EVENTOS BRUTOS
 
 > Para acessar o dashboard que é gerado no final de todo esse processo acesse o link: https://proteumetamorfo-blip.github.io/olimpo-engine/
 
-# Tecnologia Utilizadas e conceitos de aprimoramento.
+# Tecnologia Utilizadas, seus usos no projeto e conceitos de aprimoramento.
 
 ```
-| Tecnologia | Uso |
-|------------|-----|
-| Python 3.10+ | Lógica principal |
-| SQLite nativo | Persistência sem servidor de banco |
-| Regex compilada | Performance nas regras IDS |
-| ANSI escape codes | Dashboard sem dependências externas |
-| Termux (Android) | Ambiente de desenvolvimento |
+| Python 3.10+: Lógica principal.
+| SQLite nativo: Persistência sem servidor de banco.
+| Regex compilada: Performance nas regras IDS.
+| ANSI escape codes: Dashboard sem dependências externas.
+| Termux (Android): Ambiente de desenvolvimento.
 
 Essas são as complementações que podem deixar o Olimpo Engine mais forte
 
