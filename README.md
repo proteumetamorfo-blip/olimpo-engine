@@ -36,24 +36,9 @@ EVENTOS BRUTOS
        │
        ▼
   DASHBOARD + RELATÓRIO HTML
-
-Total eventos processados:   92
-Alertas CRITICAL:            29
-Alertas WARNING:              9
-Ameaças IDS detectadas:      38
-IPs na blacklist:             2
-Eventos em quarentena:        8
-
-BLACKLIST GERADA:
-  45.33.32.156 → 14x login_failed em 5min  (limite: 5)
-  198.51.100.8 → 9x contact_submit em 5min (limite: 5)
-
-AMEAÇAS IDS:
-  [HIGH]   104.21.45.33   → MALICIOUS_UA  (sqlmap detectado)
-  [MEDIUM] 89.248.172.16  → ROUTE_SCAN    (/wp-admin, /.env, /phpmyadmin)
 ```
-*Para melhorar o entendendo visual do dashboard acesse o link: https://proteumetamorfo-blip.github.io/olimpo-engine/*
-```
+> Para acessar o dashboard que é gerado no final de todo esse processo acesse o link: https://proteumetamorfo-blip.github.io/olimpo-engine/*
+
 # Estrutura do projeto
 
 
