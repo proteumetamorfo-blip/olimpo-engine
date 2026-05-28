@@ -41,7 +41,7 @@ EVENTOS BRUTOS
 
 # Estrutura do projeto
 
-
+'''
 olimpo-engine-V2/
 ├── pipeline.py            ← orquestrador principal (modo batch)
 ├── daemon.py              ← modo daemon (tempo real)
@@ -64,8 +64,9 @@ olimpo-engine-V2/
 
 
 
-# Tecnologia utilizadas.
+# Tecnologia Utilizadas.
 
+'''
 | Tecnologia | Uso |
 |------------|-----|
 | Python 3.10+ | Lógica principal |
@@ -73,54 +74,7 @@ olimpo-engine-V2/
 | Regex compilada | Performance nas regras IDS |
 | ANSI escape codes | Dashboard sem dependências externas |
 | Termux (Android) | Ambiente de desenvolvimento |
-
-
-
-
-
-# Como rodar o Olimpo Engine.
-```
-```bash
-# Pré-requisito no Termux
-
-pkg install python
-
-# 1. Gerar logs simulados
-
-timeout 15 python tools/log_generator.py --speed slow
-
-# 2. Processar e detectar
-
-python pipeline.py
-
-# 3. Ver painel de resultados
-
-python dashboard.py --once
-
-
-# Modo tempo real (duas sessões)
-
-```bash
-# Sessão 1
-
-python daemon.py
-
-# Sessão 2
-
-python tools/log_generator.py --speed normal
-```
-
-
-# Regras IDS implementadas.
-
-| Regra | O que detecta | Severidade |
-
-| `RATE_LIMIT` | Mesmo IP acima do limite na janela de tempo | CRITICAL |
-| `PATH_TRAVERSAL` | `/../`, `/etc/passwd`, `/.git/config` | HIGH |
-| `ROUTE_SCAN` | `/wp-admin`, `/.env`, `/phpmyadmin` | MEDIUM |
-| `MALICIOUS_UA` | sqlmap, nikto, masscan, gobuster | HIGH |
-| `METHOD_ABUSE` | DELETE, TRACE em rotas comuns | MEDIUM |
-
+'''
 
 # Essas são as complementações que podem deixar o Olimpo Engine mais forte.
 
@@ -133,6 +87,7 @@ python tools/log_generator.py --speed normal
 
 O meu objetivo foi provar que é possível projetar arquitetura de segurança
 em camadas com as ferramentas disponíveis.
+
 
 # Desenvolvidor
 
