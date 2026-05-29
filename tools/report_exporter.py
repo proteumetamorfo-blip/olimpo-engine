@@ -1,4 +1,3 @@
-[#!/usr/bin/env python3
 import os, sys, argparse
 from datetime import datetime, timezone
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -26,9 +25,9 @@ def build_html(stats):
     now   = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     total = stats["total"] or 1
     ok_n  = stats["total"] - stats["warning"] - stats["critical"]
-    ok_pct   = round((ok_n              / total) * 100)
-    warn_pct = round((stats["warning"]  / total) * 100)
-    crit_pct = round((stats["critical"] / total) * 100)
+    ok_pct   = round((ok_n             / total) * 100)
+    warn_pct = round((stats["warning"] / total) * 100)
+    crit_pct = round((stats["critical"]/ total) * 100)
 
     events_rows = "\n".join(
         _row(
@@ -62,100 +61,95 @@ def build_html(stats):
             f'<span style="color:#555;font-size:0.7rem;white-space:nowrap">{t["detected_at"]}</span>',
         )
         for t in stats["recent_threats"]
-    ) or "<tr><td colspan='5' style='color:#555;text-align:center;padding:1rem'>Nenhuma ameaça IDS detectada</td></tr>"
+    ) or "<tr><td colspan='5' style='color:#555;text-align:center;padding:1rem'>Nenhuma ameaca IDS</td></tr>"
 
     return f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Olimpo Engine — Relatório de Segurança</title>
-  <style>
-    :root{{--obsidian:#0a0908;--gold:#c9a84c;--mid:#1a1714;--marble:#f0ece4;}}
-    *{{box-sizing:border-box;margin:0;padding:0;}}
-    body{{background:var(--obsidian);color:var(--marble);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;padding:clamp(0.75rem,4vw,1.5rem);}}
-    h1{{font-family:Georgia,serif;color:var(--gold);font-size:clamp(1.2rem,5vw,2rem);letter-spacing:0.05em;}}
-    h2{{font-family:Georgia,serif;color:var(--gold);font-size:clamp(0.9rem,3vw,1.1rem);margin-bottom:1rem;}}
-    .subtitle{{color:rgba(240,236,228,0.45);font-size:clamp(0.7rem,2.5vw,0.85rem);margin-top:0.35rem;font-style:italic;}}
-    header{{border-bottom:1px solid rgba(201,168,76,0.25);padding-bottom:1.25rem;margin-bottom:1.75rem;}}
-    .meta{{font-family:monospace;font-size:clamp(0.6rem,2vw,0.7rem);color:rgba(201,168,76,0.5);margin-top:0.5rem;}}
-
-    .stats-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:0.6rem;margin-bottom:2rem;}}
-    .stat-card{{background:var(--mid);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:0.75rem;text-align:center;}}
-    .stat-num{{font-size:clamp(1.4rem,5vw,2rem);font-weight:700;color:var(--gold);line-height:1;}}
-    .stat-num.red{{color:#ff6b6b;}} .stat-num.yellow{{color:#ffd166;}}
-    .stat-num.purple{{color:#c084fc;}} .stat-num.green{{color:#4caf50;}}
-    .stat-label{{font-size:clamp(0.55rem,1.8vw,0.65rem);letter-spacing:0.1em;color:rgba(240,236,228,0.4);margin-top:0.3rem;text-transform:uppercase;}}
-
-    .dist-section{{margin-bottom:2rem;}}
-    .dist-row{{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem;}}
-    .dist-label{{width:65px;font-size:0.7rem;font-family:monospace;color:rgba(240,236,228,0.5);flex-shrink:0;}}
-    .bar-track{{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;min-width:0;}}
-    .bar-fill{{height:100%;border-radius:4px;}}
-    .bar-ok{{background:linear-gradient(90deg,#1a6b1a,#4caf50);}}
-    .bar-warn{{background:linear-gradient(90deg,#7a6000,#ffd166);}}
-    .bar-crit{{background:linear-gradient(90deg,#6b1a1a,#ff6b6b);}}
-    .dist-val{{width:38px;text-align:right;font-family:monospace;font-size:0.7rem;color:rgba(240,236,228,0.5);flex-shrink:0;}}
-
-    .card{{background:var(--mid);border:1px solid rgba(201,168,76,0.18);border-radius:4px;padding:clamp(0.75rem,3vw,1.25rem);margin-bottom:1rem;}}
-    .table-wrap{{overflow-x:auto;-webkit-overflow-scrolling:touch;}}
-    table{{width:100%;border-collapse:collapse;font-size:clamp(0.7rem,2.2vw,0.82rem);min-width:400px;}}
-    th{{background:rgba(201,168,76,0.12);color:var(--gold);font-family:monospace;font-size:clamp(0.6rem,1.8vw,0.65rem);letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 0.6rem;text-align:left;border-bottom:1px solid rgba(201,168,76,0.2);white-space:nowrap;}}
-    td{{padding:0.45rem 0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}}
-    tr:hover td{{background:rgba(201,168,76,0.04);}}
-    footer{{margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(201,168,76,0.15);text-align:center;font-family:monospace;font-size:0.62rem;color:rgba(201,168,76,0.3);}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Olimpo Engine</title>
+<style>
+:root{{--obsidian:#0a0908;--gold:#c9a84c;--mid:#1a1714;--marble:#f0ece4;}}
+*{{box-sizing:border-box;margin:0;padding:0;}}
+body{{background:var(--obsidian);color:var(--marble);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;padding:clamp(0.75rem,4vw,1.5rem);}}
+h1{{font-family:Georgia,serif;color:var(--gold);font-size:clamp(1.2rem,5vw,2rem);}}
+h2{{font-family:Georgia,serif;color:var(--gold);font-size:clamp(0.9rem,3vw,1.1rem);margin-bottom:1rem;}}
+.subtitle{{color:rgba(240,236,228,0.45);font-size:clamp(0.7rem,2.5vw,0.85rem);font-style:italic;}}
+header{{border-bottom:1px solid rgba(201,168,76,0.25);padding-bottom:1rem;margin-bottom:1.5rem;}}
+.meta{{font-family:monospace;font-size:clamp(0.6rem,2vw,0.7rem);color:rgba(201,168,76,0.5);margin-top:0.4rem;}}
+.stats-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:0.6rem;margin-bottom:1.5rem;}}
+.stat-card{{background:var(--mid);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:0.65rem;text-align:center;}}
+.stat-num{{font-size:clamp(1.3rem,4vw,2rem);font-weight:700;color:var(--gold);line-height:1;}}
+.stat-num.red{{color:#ff6b6b;}}.stat-num.yellow{{color:#ffd166;}}
+.stat-num.purple{{color:#c084fc;}}.stat-num.green{{color:#4caf50;}}
+.stat-label{{font-size:clamp(0.52rem,1.6vw,0.62rem);letter-spacing:0.08em;color:rgba(240,236,228,0.4);margin-top:0.25rem;text-transform:uppercase;}}
+.card{{background:var(--mid);border:1px solid rgba(201,168,76,0.18);border-radius:4px;padding:clamp(0.75rem,3vw,1.25rem);margin-bottom:1rem;}}
+.dist-row{{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;}}
+.dist-label{{width:60px;font-size:0.68rem;font-family:monospace;color:rgba(240,236,228,0.5);flex-shrink:0;}}
+.bar-track{{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;min-width:0;}}
+.bar-fill{{height:100%;border-radius:4px;}}
+.bar-ok{{background:linear-gradient(90deg,#1a6b1a,#4caf50);}}
+.bar-warn{{background:linear-gradient(90deg,#7a6000,#ffd166);}}
+.bar-crit{{background:linear-gradient(90deg,#6b1a1a,#ff6b6b);}}
+.dist-val{{width:35px;text-align:right;font-family:monospace;font-size:0.68rem;color:rgba(240,236,228,0.5);flex-shrink:0;}}
+.table-wrap{{overflow-x:auto;-webkit-overflow-scrolling:touch;}}
+table{{width:100%;border-collapse:collapse;font-size:clamp(0.68rem,2vw,0.82rem);min-width:380px;}}
+th{{background:rgba(201,168,76,0.12);color:var(--gold);font-family:monospace;font-size:clamp(0.58rem,1.6vw,0.63rem);letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 0.55rem;text-align:left;border-bottom:1px solid rgba(201,168,76,0.2);white-space:nowrap;}}
+td{{padding:0.4rem 0.55rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}}
+tr:hover td{{background:rgba(201,168,76,0.04);}}
+footer{{margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(201,168,76,0.15);text-align:center;font-family:monospace;font-size:0.6rem;color:rgba(201,168,76,0.3);}}
+</style>
 </head>
 <body>
-
 <header>
-  <h1>⚡ OLIMPO ENGINE</h1>
-  <p class="subtitle">Relatório de Auditoria de Segurança — Business Intelligence Automation Backend</p>
-  <p class="meta">Gerado em: {now} | Por: Vinícios Silva</p>
+<h1>⚡ OLIMPO ENGINE</h1>
+<p class="subtitle">Relatorio de Auditoria de Seguranca — Business Intelligence Automation Backend</p>
+<p class="meta">Gerado em: {now} | Por: Vinicios Silva</p>
 </header>
 
 <section class="stats-grid">
-  <div class="stat-card"><div class="stat-num">{stats['total']}</div><div class="stat-label">Total</div></div>
-  <div class="stat-card"><div class="stat-num green">{ok_n}</div><div class="stat-label">OK</div></div>
-  <div class="stat-card"><div class="stat-num yellow">{stats['warning']}</div><div class="stat-label">Warning</div></div>
-  <div class="stat-card"><div class="stat-num red">{stats['critical']}</div><div class="stat-label">Critical</div></div>
-  <div class="stat-card"><div class="stat-num purple">{stats['threats']}</div><div class="stat-label">Ameaças IDS</div></div>
-  <div class="stat-card"><div class="stat-num red">{stats['blacklisted']}</div><div class="stat-label">Blacklist</div></div>
-  <div class="stat-card"><div class="stat-num yellow">{stats['quarantined']}</div><div class="stat-label">Quarentena</div></div>
-</section>
-
-<section class="dist-section card">
-  <h2>DISTRIBUIÇÃO DE ALERTAS</h2>
-  <div class="dist-row"><span class="dist-label">OK</span><div class="bar-track"><div class="bar-fill bar-ok" style="width:{ok_pct}%"></div></div><span class="dist-val">{ok_pct}%</span></div>
-  <div class="dist-row"><span class="dist-label">WARNING</span><div class="bar-track"><div class="bar-fill bar-warn" style="width:{warn_pct}%"></div></div><span class="dist-val">{warn_pct}%</span></div>
-  <div class="dist-row"><span class="dist-label">CRITICAL</span><div class="bar-track"><div class="bar-fill bar-crit" style="width:{crit_pct}%"></div></div><span class="dist-val">{crit_pct}%</span></div>
+<div class="stat-card"><div class="stat-num">{stats['total']}</div><div class="stat-label">Total</div></div>
+<div class="stat-card"><div class="stat-num green">{ok_n}</div><div class="stat-label">OK</div></div>
+<div class="stat-card"><div class="stat-num yellow">{stats['warning']}</div><div class="stat-label">Warning</div></div>
+<div class="stat-card"><div class="stat-num red">{stats['critical']}</div><div class="stat-label">Critical</div></div>
+<div class="stat-card"><div class="stat-num purple">{stats['threats']}</div><div class="stat-label">Ameacas IDS</div></div>
+<div class="stat-card"><div class="stat-num red">{stats['blacklisted']}</div><div class="stat-label">Blacklist</div></div>
+<div class="stat-card"><div class="stat-num yellow">{stats['quarantined']}</div><div class="stat-label">Quarentena</div></div>
 </section>
 
 <section class="card">
-  <h2>🚫 BLACKLIST — IPs BLOQUEADOS</h2>
-  <div class="table-wrap"><table>
-    <thead><tr>{''.join(f'<th>{h}</th>' for h in ['IP','Evento','Contagem','Motivo','Detectado'])}</tr></thead>
-    <tbody>{bl_rows}</tbody>
-  </table></div>
+<h2>DISTRIBUICAO DE ALERTAS</h2>
+<div class="dist-row"><span class="dist-label">OK</span><div class="bar-track"><div class="bar-fill bar-ok" style="width:{ok_pct}%"></div></div><span class="dist-val">{ok_pct}%</span></div>
+<div class="dist-row"><span class="dist-label">WARNING</span><div class="bar-track"><div class="bar-fill bar-warn" style="width:{warn_pct}%"></div></div><span class="dist-val">{warn_pct}%</span></div>
+<div class="dist-row"><span class="dist-label">CRITICAL</span><div class="bar-track"><div class="bar-fill bar-crit" style="width:{crit_pct}%"></div></div><span class="dist-val">{crit_pct}%</span></div>
 </section>
 
 <section class="card">
-  <h2>◉ AMEAÇAS IDS DETECTADAS</h2>
-  <div class="table-wrap"><table>
-    <thead><tr>{''.join(f'<th>{h}</th>' for h in ['IP','Regra','Severidade','Detalhe','Detectado'])}</tr></thead>
-    <tbody>{thr_rows}</tbody>
-  </table></div>
+<h2>🚫 BLACKLIST — IPs BLOQUEADOS</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>IP</th><th>Evento</th><th>Contagem</th><th>Motivo</th><th>Detectado</th></tr></thead>
+<tbody>{bl_rows}</tbody>
+</table></div>
 </section>
 
 <section class="card">
-  <h2>📋 ÚLTIMOS EVENTOS (todos os tipos)</h2>
-  <div class="table-wrap"><table>
-    <thead><tr>{''.join(f'<th>{h}</th>' for h in ['IP','Evento','Rota','Alerta','IDS Tags','Timestamp'])}</tr></thead>
-    <tbody>{events_rows}</tbody>
-  </table></div>
+<h2>◉ AMEACAS IDS</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>IP</th><th>Regra</th><th>Severidade</th><th>Detalhe</th><th>Detectado</th></tr></thead>
+<tbody>{thr_rows}</tbody>
+</table></div>
 </section>
 
-<footer>OLIMPO ENGINE V2 · Vinícios Silva · Goiana, PE</footer>
+<section class="card">
+<h2>📋 ULTIMOS EVENTOS (todos os tipos)</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>IP</th><th>Evento</th><th>Rota</th><th>Alerta</th><th>IDS</th><th>Timestamp</th></tr></thead>
+<tbody>{events_rows}</tbody>
+</table></div>
+</section>
+
+<footer>OLIMPO ENGINE V2 · Vinicios Silva · Goiana, PE</footer>
 </body>
 </html>"""
 
@@ -172,4 +166,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default=OUT_DEFAULT)
     args = parser.parse_args()
-    export(args.output)]
+    export(args.output)

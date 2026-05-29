@@ -1,173 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Olimpo Engine — Relatório de Segurança</title>
-  <style>
-    :root {
-      --obsidian: #0a0908; --gold: #c9a84c; --gold-dim: #8a6f2e;
-      --marble: #f0ece4;   --ember: #8b1a1a; --mid: #1a1714;
-    }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body {
-      background:var(--obsidian); color:var(--marble);
-      font-family:'Segoe UI',system-ui,sans-serif;
-      font-size:14px; line-height:1.6; padding:1.5rem;
-    }
-    h1 { font-family:Georgia,serif; color:var(--gold); font-size:clamp(1.4rem,4vw,2rem); letter-spacing:0.05em; }
-    h2 { font-family:Georgia,serif; color:var(--gold); font-size:1.1rem; margin-bottom:1rem; letter-spacing:0.08em; }
-    .subtitle { color:rgba(240,236,228,0.45); font-size:0.85rem; margin-top:0.35rem; font-style:italic; }
-    header { border-bottom:1px solid rgba(201,168,76,0.25); padding-bottom:1.25rem; margin-bottom:1.75rem; }
-    .meta { font-family:monospace; font-size:0.7rem; color:rgba(201,168,76,0.5); margin-top:0.5rem; }
-
-    /* Stats grid */
-    .stats-grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-      gap:0.75rem; margin-bottom:2rem;
-    }
-    .stat-card {
-      background:var(--mid); border:1px solid rgba(201,168,76,0.2);
-      border-radius:4px; padding:1rem; text-align:center;
-    }
-    .stat-num { font-size:2rem; font-weight:700; color:var(--gold); line-height:1; }
-    .stat-num.red { color:#ff6b6b; }
-    .stat-num.yellow { color:#ffd166; }
-    .stat-num.purple { color:#c084fc; }
-    .stat-label { font-size:0.65rem; letter-spacing:0.12em; color:rgba(240,236,228,0.4); margin-top:0.3rem; text-transform:uppercase; }
-
-    /* Progress bars */
-    .dist-section { margin-bottom:2rem; }
-    .dist-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem; }
-    .dist-label { width:70px; font-size:0.72rem; font-family:monospace; color:rgba(240,236,228,0.5); }
-    .bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
-    .bar-fill { height:100%; border-radius:4px; transition:width 0.3s; }
-    .bar-ok { background:linear-gradient(90deg,#1a6b1a,#4caf50); }
-    .bar-warn { background:linear-gradient(90deg,#7a6000,#ffd166); }
-    .bar-crit { background:linear-gradient(90deg,#6b1a1a,#ff6b6b); }
-    .dist-val { width:40px; text-align:right; font-family:monospace; font-size:0.72rem; color:rgba(240,236,228,0.5); }
-
-    /* Tables */
-    .table-section { margin-bottom:2rem; }
-    table { width:100%; border-collapse:collapse; font-size:0.82rem; }
-    th {
-      background:rgba(201,168,76,0.12); color:var(--gold);
-      font-family:monospace; font-size:0.65rem; letter-spacing:0.1em;
-      text-transform:uppercase; padding:0.6rem 0.75rem; text-align:left;
-      border-bottom:1px solid rgba(201,168,76,0.2);
-    }
-    td { padding:0.55rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.04); }
-    tr:hover td { background:rgba(201,168,76,0.04); }
-    .card { background:var(--mid); border:1px solid rgba(201,168,76,0.18); border-radius:4px; padding:1.25rem; }
-    footer {
-      margin-top:2.5rem; padding-top:1rem;
-      border-top:1px solid rgba(201,168,76,0.15);
-      text-align:center; font-family:monospace;
-      font-size:0.65rem; color:rgba(201,168,76,0.3);
-    }
-    @media(max-width:600px) { body { padding:0.75rem; } td,th { padding:0.4rem 0.5rem; } }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Olimpo Engine</title>
+<style>
+:root{--obsidian:#0a0908;--gold:#c9a84c;--mid:#1a1714;--marble:#f0ece4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--obsidian);color:var(--marble);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6;padding:clamp(0.75rem,4vw,1.5rem);}
+h1{font-family:Georgia,serif;color:var(--gold);font-size:clamp(1.2rem,5vw,2rem);}
+h2{font-family:Georgia,serif;color:var(--gold);font-size:clamp(0.9rem,3vw,1.1rem);margin-bottom:1rem;}
+.subtitle{color:rgba(240,236,228,0.45);font-size:clamp(0.7rem,2.5vw,0.85rem);font-style:italic;}
+header{border-bottom:1px solid rgba(201,168,76,0.25);padding-bottom:1rem;margin-bottom:1.5rem;}
+.meta{font-family:monospace;font-size:clamp(0.6rem,2vw,0.7rem);color:rgba(201,168,76,0.5);margin-top:0.4rem;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:0.6rem;margin-bottom:1.5rem;}
+.stat-card{background:var(--mid);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:0.65rem;text-align:center;}
+.stat-num{font-size:clamp(1.3rem,4vw,2rem);font-weight:700;color:var(--gold);line-height:1;}
+.stat-num.red{color:#ff6b6b;}.stat-num.yellow{color:#ffd166;}
+.stat-num.purple{color:#c084fc;}.stat-num.green{color:#4caf50;}
+.stat-label{font-size:clamp(0.52rem,1.6vw,0.62rem);letter-spacing:0.08em;color:rgba(240,236,228,0.4);margin-top:0.25rem;text-transform:uppercase;}
+.card{background:var(--mid);border:1px solid rgba(201,168,76,0.18);border-radius:4px;padding:clamp(0.75rem,3vw,1.25rem);margin-bottom:1rem;}
+.dist-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;}
+.dist-label{width:60px;font-size:0.68rem;font-family:monospace;color:rgba(240,236,228,0.5);flex-shrink:0;}
+.bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;min-width:0;}
+.bar-fill{height:100%;border-radius:4px;}
+.bar-ok{background:linear-gradient(90deg,#1a6b1a,#4caf50);}
+.bar-warn{background:linear-gradient(90deg,#7a6000,#ffd166);}
+.bar-crit{background:linear-gradient(90deg,#6b1a1a,#ff6b6b);}
+.dist-val{width:35px;text-align:right;font-family:monospace;font-size:0.68rem;color:rgba(240,236,228,0.5);flex-shrink:0;}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:clamp(0.68rem,2vw,0.82rem);min-width:380px;}
+th{background:rgba(201,168,76,0.12);color:var(--gold);font-family:monospace;font-size:clamp(0.58rem,1.6vw,0.63rem);letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 0.55rem;text-align:left;border-bottom:1px solid rgba(201,168,76,0.2);white-space:nowrap;}
+td{padding:0.4rem 0.55rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}
+tr:hover td{background:rgba(201,168,76,0.04);}
+footer{margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(201,168,76,0.15);text-align:center;font-family:monospace;font-size:0.6rem;color:rgba(201,168,76,0.3);}
+</style>
 </head>
 <body>
-
 <header>
-  <h1>⚡ OLIMPO ENGINE</h1>
-  <p class="subtitle">Relatório de Auditoria de Segurança — Business Intelligence Automation Backend</p>
-  <p class="meta">Gerado em: 2026-05-26 02:23:29 UTC | Por: Vinícios Silva</p>
+<h1>⚡ OLIMPO ENGINE</h1>
+<p class="subtitle">Relatorio de Auditoria de Seguranca — Business Intelligence Automation Backend</p>
+<p class="meta">Gerado em: 2026-05-29 06:17:01 UTC | Por: Vinicios Silva</p>
 </header>
 
-<!-- Contadores -->
 <section class="stats-grid">
-  <div class="stat-card">
-    <div class="stat-num">92</div>
-    <div class="stat-label">Total Eventos</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num red">37</div>
-    <div class="stat-label">Critical</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num yellow">55</div>
-    <div class="stat-label">Warning</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num purple">38</div>
-    <div class="stat-label">Ameaças IDS</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num red">3</div>
-    <div class="stat-label">Blacklist</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num yellow">8</div>
-    <div class="stat-label">Quarentena</div>
-  </div>
+<div class="stat-card"><div class="stat-num">100</div><div class="stat-label">Total</div></div>
+<div class="stat-card"><div class="stat-num green">0</div><div class="stat-label">OK</div></div>
+<div class="stat-card"><div class="stat-num yellow">69</div><div class="stat-label">Warning</div></div>
+<div class="stat-card"><div class="stat-num red">31</div><div class="stat-label">Critical</div></div>
+<div class="stat-card"><div class="stat-num purple">34</div><div class="stat-label">Ameacas IDS</div></div>
+<div class="stat-card"><div class="stat-num red">3</div><div class="stat-label">Blacklist</div></div>
+<div class="stat-card"><div class="stat-num yellow">0</div><div class="stat-label">Quarentena</div></div>
 </section>
 
-<!-- Distribuição -->
-<section class="dist-section card" style="margin-bottom:2rem">
-  <h2>DISTRIBUIÇÃO DE ALERTAS</h2>
-  <div class="dist-row">
-    <span class="dist-label">OK</span>
-    <div class="bar-track"><div class="bar-fill bar-ok" style="width:0%"></div></div>
-    <span class="dist-val">0%</span>
-  </div>
-  <div class="dist-row">
-    <span class="dist-label">WARNING</span>
-    <div class="bar-track"><div class="bar-fill bar-warn" style="width:60%"></div></div>
-    <span class="dist-val">60%</span>
-  </div>
-  <div class="dist-row">
-    <span class="dist-label">CRITICAL</span>
-    <div class="bar-track"><div class="bar-fill bar-crit" style="width:40%"></div></div>
-    <span class="dist-val">40%</span>
-  </div>
+<section class="card">
+<h2>DISTRIBUICAO DE ALERTAS</h2>
+<div class="dist-row"><span class="dist-label">OK</span><div class="bar-track"><div class="bar-fill bar-ok" style="width:0%"></div></div><span class="dist-val">0%</span></div>
+<div class="dist-row"><span class="dist-label">WARNING</span><div class="bar-track"><div class="bar-fill bar-warn" style="width:69%"></div></div><span class="dist-val">69%</span></div>
+<div class="dist-row"><span class="dist-label">CRITICAL</span><div class="bar-track"><div class="bar-fill bar-crit" style="width:31%"></div></div><span class="dist-val">31%</span></div>
 </section>
 
-<!-- Blacklist -->
-<section class="table-section card">
-  <h2>🚫 BLACKLIST — IPs BLOQUEADOS</h2>
-  <table>
-    <thead><tr><th>IP</th><th>Evento</th><th>Contagem</th><th>Motivo</th><th>Detectado</th></tr></thead>
-    <tbody><tr><td><strong style="color:#ff6b6b">89.248.172.16</strong></td><td>route_scan</td><td><span style="color:#c9a84c">9x</span></td><td>9x 'route_scan' em 60s (limite: 4)</td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">45.33.32.156</strong></td><td>login_failed</td><td><span style="color:#c9a84c">14x</span></td><td>14x 'login_failed' em 120s (limite: 3)</td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">198.51.100.8</strong></td><td>contact_submit</td><td><span style="color:#c9a84c">9x</span></td><td>9x 'contact_submit' em 300s (limite: 5)</td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr></tbody>
-  </table>
+<section class="card">
+<h2>🚫 BLACKLIST — IPs BLOQUEADOS</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>IP</th><th>Evento</th><th>Contagem</th><th>Motivo</th><th>Detectado</th></tr></thead>
+<tbody><tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">45.33.32.156</strong></td><td><span style="font-size:0.8rem">login_failed</span></td><td><span style="color:#c9a84c;font-weight:700">7x</span></td><td><span style="font-size:0.75rem;color:#ccc">7x 'login_failed' em 120s (limite: 3)</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">89.248.172.16</strong></td><td><span style="font-size:0.8rem">route_scan</span></td><td><span style="color:#c9a84c;font-weight:700">14x</span></td><td><span style="font-size:0.75rem;color:#ccc">14x 'route_scan' em 60s (limite: 4)</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">198.51.100.8</strong></td><td><span style="font-size:0.8rem">contact_submit</span></td><td><span style="color:#c9a84c;font-weight:700">7x</span></td><td><span style="font-size:0.75rem;color:#ccc">7x 'contact_submit' em 300s (limite: 5)</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr></tbody>
+</table></div>
 </section>
 
-<!-- Ameaças IDS -->
-<section class="table-section card" style="margin-top:1rem">
-  <h2>◉ AMEAÇAS IDS DETECTADAS</h2>
-  <table>
-    <thead><tr><th>IP</th><th>Regra</th><th>Severidade</th><th>Detalhe</th><th>Detectado</th></tr></thead>
-    <tbody><tr><td><strong style="color:#ff6b6b">104.21.45.33</strong></td><td><span style="color:#c9a84c;font-family:monospace">MALICIOUS_UA</span></td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">HIGH</span></td><td><span style="font-size:0.8rem">UA suspeito: 'Nikto/2.1.6'</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">89.248.172.16</strong></td><td><span style="color:#c9a84c;font-family:monospace">ROUTE_SCAN</span></td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.8rem">Rota sensivel: '/phpmyadmin'</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">89.248.172.16</strong></td><td><span style="color:#c9a84c;font-family:monospace">ROUTE_SCAN</span></td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.8rem">Rota sensivel: '/wp-admin'</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">89.248.172.16</strong></td><td><span style="color:#c9a84c;font-family:monospace">ROUTE_SCAN</span></td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.8rem">Rota sensivel: '/phpmyadmin'</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">104.21.45.33</strong></td><td><span style="color:#c9a84c;font-family:monospace">MALICIOUS_UA</span></td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">HIGH</span></td><td><span style="font-size:0.8rem">UA suspeito: 'sqlmap/1.7.8'</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr>
-<tr><td><strong style="color:#ff6b6b">89.248.172.16</strong></td><td><span style="color:#c9a84c;font-family:monospace">ROUTE_SCAN</span></td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.8rem">Rota sensivel: '/shell.php'</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-26 02:19:11</span></td></tr></tbody>
-  </table>
+<section class="card">
+<h2>◉ AMEACAS IDS</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>IP</th><th>Regra</th><th>Severidade</th><th>Detalhe</th><th>Detectado</th></tr></thead>
+<tbody><tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">104.21.45.33</strong></td><td><span style="color:#c9a84c;font-family:monospace;font-size:0.75rem">MALICIOUS_UA</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">HIGH</span></td><td><span style="font-size:0.75rem;color:#ccc;word-break:break-all">UA suspeito: 'python-requests/2.28.0'</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">198.51.100.8</strong></td><td><span style="color:#c9a84c;font-family:monospace;font-size:0.75rem">MALICIOUS_UA</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">HIGH</span></td><td><span style="font-size:0.75rem;color:#ccc;word-break:break-all">UA suspeito: 'python-requests/2.28.0'</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">89.248.172.16</strong></td><td><span style="color:#c9a84c;font-family:monospace;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.75rem;color:#ccc;word-break:break-all">Rota sensivel: '/phpmyadmin'</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">45.33.32.156</strong></td><td><span style="color:#c9a84c;font-family:monospace;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.75rem;color:#ccc;word-break:break-all">Rota sensivel: '/admin'</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">45.33.32.156</strong></td><td><span style="color:#c9a84c;font-family:monospace;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.75rem;color:#ccc;word-break:break-all">Rota sensivel: '/admin'</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr>
+<tr><td><strong style="color:#ff6b6b;font-family:monospace;font-size:0.8rem">45.33.32.156</strong></td><td><span style="color:#c9a84c;font-family:monospace;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">MEDIUM</span></td><td><span style="font-size:0.75rem;color:#ccc;word-break:break-all">Rota sensivel: '/admin'</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:17:01</span></td></tr></tbody>
+</table></div>
 </section>
 
-<!-- Eventos recentes -->
-<section class="table-section card" style="margin-top:1rem">
-  <h2>📋 ÚLTIMOS EVENTOS PROCESSADOS</h2>
-  <table>
-    <thead><tr><th>IP</th><th>Evento</th><th>Rota</th><th>Alerta</th><th>IDS Tags</th><th>Timestamp</th></tr></thead>
-    <tbody><tr><td>104.21.45.33</td><td>page_view</td><td>/contato</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.75rem">MALICIOUS_UA</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:53</span></td></tr>
-<tr><td>177.92.3.10</td><td>page_view</td><td>/contato</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.75rem">—</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:53</span></td></tr>
-<tr><td>89.248.172.16</td><td>route_scan</td><td>/phpmyadmin</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:53</span></td></tr>
-<tr><td>89.248.172.16</td><td>route_scan</td><td>/wp-admin</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:52</span></td></tr>
-<tr><td>89.248.172.16</td><td>route_scan</td><td>/phpmyadmin</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:52</span></td></tr>
-<tr><td>104.21.45.33</td><td>page_view</td><td>/arsenal</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.75rem">MALICIOUS_UA</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:52</span></td></tr>
-<tr><td>200.138.12.44</td><td>page_view</td><td>/arsenal</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.75rem">—</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:52</span></td></tr>
-<tr><td>89.248.172.16</td><td>route_scan</td><td>/shell.php</td><td><span style="padding:2px 8px;border-radius:3px;font-size:0.75rem;font-family:monospace;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.75rem">ROUTE_SCAN</span></td><td><span style="color:#666;font-size:0.75rem">2026-05-19 21:02:52</span></td></tr></tbody>
-  </table>
+<section class="card">
+<h2>📋 ULTIMOS EVENTOS (todos os tipos)</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>IP</th><th>Evento</th><th>Rota</th><th>Alerta</th><th>IDS</th><th>Timestamp</th></tr></thead>
+<tbody><tr><td><span style="font-family:monospace;font-size:0.75rem">104.21.45.33</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">MALICIOUS_UA</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">198.51.100.8</span></td><td><span style="font-size:0.8rem">contact_submit</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/contato</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">MALICIOUS_UA</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">189.28.14.5</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">189.28.14.5</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/monumentos</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">201.55.22.8</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/contato</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">89.248.172.16</span></td><td><span style="font-size:0.8rem">route_scan</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/phpmyadmin</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">ROUTE_SCAN</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">45.33.32.156</span></td><td><span style="font-size:0.8rem">login_failed</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/admin</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">ROUTE_SCAN</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:56</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">45.33.32.156</span></td><td><span style="font-size:0.8rem">login_failed</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/admin</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">ROUTE_SCAN</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">189.28.14.5</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/contato</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">189.28.14.5</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">201.55.22.8</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">177.92.3.10</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/arsenal</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">187.45.67.3</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/monumentos</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">200.138.12.44</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/arsenal</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">177.92.3.10</span></td><td><span style="font-size:0.8rem">contact_submit</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/contato</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">45.33.32.156</span></td><td><span style="font-size:0.8rem">login_failed</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/admin</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">ROUTE_SCAN</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">200.138.12.44</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:55</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">200.138.12.44</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/monumentos</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:54</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">89.248.172.16</span></td><td><span style="font-size:0.8rem">route_scan</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/shell.php</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#8b1a1a;color:#f0ece4">CRITICAL</span></td><td><span style="color:#c9a84c;font-size:0.7rem">ROUTE_SCAN</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:54</span></td></tr>
+<tr><td><span style="font-family:monospace;font-size:0.75rem">201.55.22.8</span></td><td><span style="font-size:0.8rem">page_view</span></td><td><span style="font-size:0.75rem;color:#888;word-break:break-all">/arsenal</span></td><td><span style="padding:2px 6px;border-radius:3px;font-size:0.7rem;font-family:monospace;white-space:nowrap;background:#7a6000;color:#f0ece4">WARNING</span></td><td><span style="color:#c9a84c;font-size:0.7rem">—</span></td><td><span style="color:#555;font-size:0.7rem;white-space:nowrap">2026-05-29 06:16:54</span></td></tr></tbody>
+</table></div>
 </section>
 
-<footer>
-  OLIMPO ENGINE V2 · Business Intelligence Automation Backend · Vinícios Silva · Goiana, PE
-</footer>
-
+<footer>OLIMPO ENGINE V2 · Vinicios Silva · Goiana, PE</footer>
 </body>
 </html>
