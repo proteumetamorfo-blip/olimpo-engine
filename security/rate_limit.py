@@ -28,29 +28,45 @@ def analyze(clean_events):
             groups[(ev["ip"], event_type)].append(ev["_parsed_ts"])
 
     abusive_ips = {}
+
+    # IPs próximos do limite (WARNING) — entre 50% e 100% do limite
+    warning_ips = {}
+
     for (ip, event_type), timestamps in groups.items():
         max_allowed, window_secs = EVENT_LIMITS[event_type]
-        for i in range(len(sorted(timestamps))):
-            ts_sorted    = sorted(timestamps)
+        ts_sorted = sorted(timestamps)
+        for i in range(len(ts_sorted)):
             window_start = ts_sorted[i]
             window_end   = window_start + timedelta(seconds=window_secs)
             in_window    = [t for t in ts_sorted[i:] if t <= window_end]
-            if len(in_window) > max_allowed:
+            count        = len(in_window)
+
+            if count > max_allowed:
                 if ip not in abusive_ips:
                     abusive_ips[ip] = _make_entry(
-                        ip, event_type, len(in_window),
+                        ip, event_type, count,
                         window_start, window_end, max_allowed, window_secs)
                 break
+            elif count >= max(2, max_allowed // 2):
+                # Aproximando do limite — WARNING
+                warning_ips[ip] = event_type
 
     flagged_events = []
     abusive_ip_set = set(abusive_ips.keys())
+
     for ev in clean_events:
         flagged = dict(ev)
         flagged.pop("_parsed_ts", None)
+        ip         = ev["ip"]
         event_type = ev.get("event","")
-        if ev["ip"] in abusive_ip_set:        flagged["alert_level"] = "CRITICAL"
-        elif event_type in EVENT_LIMITS:       flagged["alert_level"] = "WARNING"
-        else:                                  flagged["alert_level"] = "OK"
+
+        if ip in abusive_ip_set:
+            flagged["alert_level"] = "CRITICAL"
+        elif ip in warning_ips and event_type in EVENT_LIMITS:
+            flagged["alert_level"] = "WARNING"
+        else:
+            flagged["alert_level"] = "OK"
+
         flagged_events.append(flagged)
 
     return flagged_events, list(abusive_ips.values())
